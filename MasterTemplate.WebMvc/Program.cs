@@ -1,5 +1,6 @@
 using MasterTemplate.Common.Utilities;
 using MasterTemplate.Data;
+using MasterTemplate.Service.Database;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -17,6 +18,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+#region Data Service
+//builder.Services.AddScoped<ProductService>();
+#endregion
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

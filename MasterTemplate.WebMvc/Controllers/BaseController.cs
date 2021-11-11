@@ -9,10 +9,9 @@ namespace MasterTemplate.WebMvc.Controllers
         public string LogedInUser { get; set; }
         public ResponseModel _response { get; set; }
 
-        public readonly IConfiguration _configuration;
-        public BaseController(IConfiguration configuration)
+        
+        public BaseController()
         {
-            _configuration = configuration;
             _response = new ResponseModel();
             LogedInUser = "";
         }

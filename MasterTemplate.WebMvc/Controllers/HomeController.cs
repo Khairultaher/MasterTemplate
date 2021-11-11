@@ -7,9 +7,11 @@ namespace MasterTemplate.WebMvc.Controllers
     public class HomeController : BaseController
     {
         private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IConfiguration _configuration;
+        public HomeController(ILogger<HomeController> logger
+            , IConfiguration configuration)
         {
+            _configuration = configuration;
             _logger = logger;
         }
 

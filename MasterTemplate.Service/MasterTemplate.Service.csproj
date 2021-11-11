@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Database\" />
+    <ProjectReference Include="..\MasterTemplate.Data\MasterTemplate.Data.csproj" />
   </ItemGroup>
 
 </Project>
