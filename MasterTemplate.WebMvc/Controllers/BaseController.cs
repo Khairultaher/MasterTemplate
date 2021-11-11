@@ -7,11 +7,13 @@ namespace MasterTemplate.WebMvc.Controllers
     public class BaseController : Controller
     {
         public string LogedInUser { get; set; }
-        public ResponseModel ResponseModel { get; set; }
+        public ResponseModel _response { get; set; }
 
-        public BaseController()
+        public readonly IConfiguration _configuration;
+        public BaseController(IConfiguration configuration)
         {
-            ResponseModel = new ResponseModel();
+            _configuration = configuration;
+            _response = new ResponseModel();
             LogedInUser = "";
         }
         public override void OnActionExecuting(ActionExecutingContext context)

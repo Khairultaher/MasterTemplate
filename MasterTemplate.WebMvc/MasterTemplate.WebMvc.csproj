@@ -7,7 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MasterTemplate.Common\MasterTemplate.Common.csproj" />
+    <ProjectReference Include="..\MasterTemplate.Data\MasterTemplate.Data.csproj" />
   </ItemGroup>
 
 </Project>
