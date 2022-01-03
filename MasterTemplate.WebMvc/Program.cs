@@ -1,7 +1,9 @@
 using MasterTemplate.Common.Utilities;
 using MasterTemplate.Data;
 using MasterTemplate.Service.Database;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -29,11 +31,32 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-// Configure Authentication
-builder.Services.AddAuthentication(auth =>
+// Configure Token Based Authentication
+builder.Services.AddAuthentication(config =>
 {
-    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    //auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    //auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    config.DefaultScheme = "AppCookieAuth";
+
+}).AddPolicyScheme("AppCookieAuth", "Bearer or Jwt", options =>
+{
+    options.ForwardDefaultSelector = context =>
+    {
+        var bearerAuth = context.Request.Headers["Authorization"].FirstOrDefault()?.StartsWith("Bearer ") ?? false;
+        if (bearerAuth)
+            return JwtBearerDefaults.AuthenticationScheme;
+        else
+            return CookieAuthenticationDefaults.AuthenticationScheme;
+    };
+}).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+{
+    options.Cookie.Name = "AppCookieAuth";
+    options.LoginPath = new PathString("/auth/login");
+    options.AccessDeniedPath = new PathString("/auth/login");
+    options.LogoutPath = new PathString("/auth/logout");
+    options.SlidingExpiration = true;
+    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+
 }).AddJwtBearer(options =>
 {
     options.SaveToken = true;
@@ -47,9 +70,23 @@ builder.Services.AddAuthentication(auth =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Constants.JwtToken.SigningKey))
     };
 });
+builder.Services.AddAuthorization(options =>
+{
+    options.DefaultPolicy = 
+    new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme, 
+                                   JwtBearerDefaults.AuthenticationScheme)
+        .RequireAuthenticatedUser()
+        .Build();
+});
+//builder.Services.AddAuthentication("AppCookieAuth")
+//    .AddCookie("AppCookieAuth", options =>
+//    {
+//        options.Cookie.Name = "AppCookieAuth";
+
+//    });
 
 builder.Services.AddAuthorization(options =>
-    options.AddPolicy("HRAdmin", policy => policy.RequireClaim("Depertment","HR")
+    options.AddPolicy("HRAdmin", policy => policy.RequireClaim("Depertment", "HR")
                                                   .RequireRole("Admin"))
 );
 

@@ -19,17 +19,17 @@ namespace MasterTemplate.WebMvc.Controllers
         {
             Constants.BaseUrl = $"{this.Request.Scheme}://{this.Request.Host}";
 
-            //if (User.Identity.IsAuthenticated)
-            //{
-            //    LogedInUser = GetLogedInUser();
-            //}
+            if (User.Identity.IsAuthenticated)
+            {
+                LogedInUser = GetLogedInUser();
+            }
 
             base.OnActionExecuting(context);
         }
 
         public string GetLogedInUser()
         {
-            return @User.Identity.Name;
+            return User.Identity.Name;
         }
     }
 }
