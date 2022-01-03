@@ -24,5 +24,13 @@ namespace MasterTemplate.Common.Utilities
             public static string SMTP_HOST { get; set; } = "";
             public static string FB_Key { get; set; } = "";
         }
+
+        public static class JwtToken
+        {
+            public static string Issuer = "";
+            public static string Audience = "";
+            public static string SigningKey = "";
+            public static int TokenTimeoutMinutes = 60;
+        }
     }
 }
