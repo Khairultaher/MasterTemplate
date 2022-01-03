@@ -33,7 +33,7 @@ namespace MasterTemplate.WebMvc.Controllers
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
             // Optionally add other app specific claims as needed
-            //claims.Add(new Claim("UserState", UserState.ToString()));
+            claims.Add(new Claim("Depertment", "Accounts"));
 
             // create a new token with token helper and add our claim
             var token = JwtTokenHelper.GetJwtToken(vm.UserId ?? "",

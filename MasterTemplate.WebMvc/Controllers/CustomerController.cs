@@ -19,5 +19,15 @@ namespace MasterTemplate.WebMvc.Controllers
             var customers = new List<string> { "A","B","C"};
             return Json(customers);
         }
+
+        [Authorize(policy: "HRAdmin")]
+        [HttpGet]
+        [Route("GetCustomersByPolicy")]
+        public async Task<IActionResult> GetCustomersByPolicy()
+        {
+            await Task.Delay(500);
+            var customers = new List<string> { "A", "B", "C" };
+            return Json(customers);
+        }
     }
 }

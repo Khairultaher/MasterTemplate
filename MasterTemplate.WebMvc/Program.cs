@@ -48,6 +48,11 @@ builder.Services.AddAuthentication(auth =>
     };
 });
 
+builder.Services.AddAuthorization(options =>
+    options.AddPolicy("HRAdmin", policy => policy.RequireClaim("Depertment","HR")
+                                                  .RequireRole("Admin"))
+);
+
 #region Data Service
 //builder.Services.AddScoped<ProductService>();
 #endregion
