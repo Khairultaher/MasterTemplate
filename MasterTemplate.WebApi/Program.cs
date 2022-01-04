@@ -1,5 +1,6 @@
 using MasterTemplate.Common.Utilities;
 using MasterTemplate.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -32,19 +33,23 @@ builder.Services.AddSwaggerGen();
 
 #region Configure Token Based Authentication 
 
-builder.Services.AddAuthentication().AddJwtBearer(options =>
-{
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters
+builder.Services.AddAuthentication(options=> {
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultSignOutScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
     {
-        ValidateIssuer = true,
-        ValidIssuer = Constants.JwtToken.Issuer,
-        ValidateAudience = true,
-        ValidAudience = Constants.JwtToken.Audience,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Constants.JwtToken.SigningKey))
-    };
-});
+        options.SaveToken = true;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = Constants.JwtToken.Issuer,
+            ValidateAudience = true,
+            ValidAudience = Constants.JwtToken.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Constants.JwtToken.SigningKey))
+        };
+    });
 #endregion
 
 #region Configure Authorization with Policy
@@ -82,8 +87,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();

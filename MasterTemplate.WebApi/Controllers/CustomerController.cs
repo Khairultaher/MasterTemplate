@@ -11,7 +11,7 @@ namespace MasterTemplate.WebApi.Controllers
     public class CustomerController : BaseController
     {
         [HttpGet]
-        [Route("customers")]
+        [Route("GetCustomers")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetCustomers()
         {

@@ -36,12 +36,8 @@ namespace MasterTemplate.WebApi.Controllers
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
             }
-
             // Optionally add other app specific claims as needed
             claims.Add(new Claim("Depertment", user.Depertment));
-
-            var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
 
             // create a new token with token helper and add our claim
             var token = JwtTokenHelper.GetJwtToken(vm.UserName ?? "",
