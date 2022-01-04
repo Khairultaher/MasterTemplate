@@ -22,12 +22,7 @@ namespace MasterTemplate.WebMvc.Controllers
         {
             // our code before action executes
 
-            Constants.BaseUrl = $"{this.Request.Scheme}://{this.Request.Host}";
-
-            if (User.Identity.IsAuthenticated)
-            {
-                LogedInUser = User.Identity.Name;
-            }
+            //Constants.BaseUrl = $"{this.Request.Scheme}://{this.Request.Host}";
 
             base.OnActionExecuting(context);
         }

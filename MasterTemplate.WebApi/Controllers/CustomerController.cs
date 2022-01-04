@@ -1,38 +1,46 @@
-﻿using MasterTemplate.WebMvc.Controllers;
+﻿
+using MasterTemplate.Data.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MasterTemplate.WebMvc.APIs
+namespace MasterTemplate.WebApi.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
-    public class CustomerController : Controller
+    [ApiController]
+    public class CustomerController : BaseController
     {
-        [HttpGet(Name = "GetCustomers")]
+        [HttpGet]
+        [Route("customers")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetCustomers()
         {
             await Task.Delay(500);
             var customers = new List<string> { "By Admin Role", "A", "B", "C" };
-            return Ok(customers);
+            response.Data = customers;
+            return Ok(response);
         }
 
-        [HttpGet(Name = "GetCustomersByHRAdminPolicy")]
+        [HttpGet]
+        [Route("GetCustomersByHRAdminPolicy")]
         [Authorize(policy: "HRAdmin")]
         public async Task<IActionResult> GetCustomersByHRAdminPolicy()
         {
             await Task.Delay(500);
             var customers = new List<string> { "By HRAdmin Policy", "A", "B", "C" };
-            return Ok(customers);
+            response.Data = customers;
+            return Ok(response);
         }
 
-        [HttpGet(Name = "GetCustomersByAccountsAdminPolicy")]
+        [HttpGet]
+        [Route("GetCustomersByAccountsAdminPolicy")]
         [Authorize(policy: "AccountsAdmin")]
         public async Task<IActionResult> GetCustomersByAccountsAdminPolicy()
         {
             await Task.Delay(500);
             var customers = new List<string> { "By AccountsAdmin Policy", "A", "B", "C" };
-            return Ok(customers);
+            response.Data = customers;
+            return Ok(response);
         }
     }
 }

@@ -8,7 +8,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 var env = builder.Configuration.GetSection("Environment").Value;
 //builder.Configuration.AddJsonFile($"appsettings.{env}.json", false, true);
 IConfiguration configuration = new ConfigurationBuilder()
@@ -20,61 +19,68 @@ Constants.JwtToken.Issuer = configuration["JwtToken:Issuer"];
 Constants.JwtToken.Audience = configuration["JwtToken:Audience"];
 Constants.JwtToken.SigningKey = configuration["JwtToken:SigningKey"];
 #endregion
+
 // Add services to the container.
-builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     //options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+    //options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-#region Configure Token & Cookie Based Authentication
+builder.Services.AddControllersWithViews();
 
-builder.Services.AddAuthentication(config =>
-{
-    config.DefaultScheme = "AppCookies";
+#region Configure Token & Cookie Based Authentication Together
 
-}).AddPolicyScheme("AppCookies", "Cookies or JWT", options =>
-{
-    options.ForwardDefaultSelector = context =>
-    {
-        var bearerAuth = context.Request.Headers["Authorization"].FirstOrDefault()?.StartsWith("Bearer ") ?? false;
-        if (bearerAuth)
-            return JwtBearerDefaults.AuthenticationScheme;
-        else
-            return CookieAuthenticationDefaults.AuthenticationScheme;
-    };
-}).AddCookie(options =>
-{
-    options.Cookie.Name = "AppCookies";
-    options.LoginPath = new PathString("/auth/login");
-    options.AccessDeniedPath = "/Auth/Login"; ;
-    options.LogoutPath = new PathString("/auth/logout");
-    options.SlidingExpiration = true;
-    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+//builder.Services.AddAuthentication(config =>
+//{
+//    config.DefaultScheme = "AppCookies";
 
-}).AddJwtBearer(options =>
-{
-    options.SaveToken = true;
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidIssuer = Constants.JwtToken.Issuer,
-        ValidateAudience = true,
-        ValidAudience = Constants.JwtToken.Audience,
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Constants.JwtToken.SigningKey))
-    };
-});
-
-//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+//}).AddPolicyScheme("AppCookies", "Cookies or JWT", options =>
+//{
+//    options.ForwardDefaultSelector = context =>
 //    {
-//        options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
-//        options.LoginPath = new PathString("/auth/login");
-//        options.AccessDeniedPath = new PathString("/auth/login");
-//    });
+//        var bearerAuth = context.Request.Headers["Authorization"].FirstOrDefault()?.StartsWith("Bearer ") ?? false;
+//        if (bearerAuth)
+//            return JwtBearerDefaults.AuthenticationScheme;
+//        else
+//            return CookieAuthenticationDefaults.AuthenticationScheme;
+//    };
+//}).AddCookie(options =>
+//{
+//    options.Cookie.Name = "AppCookies";
+//    options.LoginPath = new PathString("/auth/login");
+//    options.AccessDeniedPath = "/Auth/Login"; ;
+//    options.LogoutPath = new PathString("/auth/logout");
+//    options.SlidingExpiration = true;
+//    options.ExpireTimeSpan = TimeSpan.FromHours(1);
+
+//}).AddJwtBearer(options =>
+//{
+//    options.SaveToken = true;
+//    options.TokenValidationParameters = new TokenValidationParameters
+//    {
+//        ValidateIssuer = true,
+//        ValidIssuer = Constants.JwtToken.Issuer,
+//        ValidateAudience = true,
+//        ValidAudience = Constants.JwtToken.Audience,
+//        ValidateIssuerSigningKey = true,
+//        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Constants.JwtToken.SigningKey))
+//    };
+//});
+#endregion
+
+#region Configure Cookie Based Authentication
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+    {
+        options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.LoginPath = new PathString("/auth/login");
+        options.AccessDeniedPath = new PathString("/auth/login");
+        options.LogoutPath = new PathString("/auth/logout");
+        options.SlidingExpiration = true;
+        options.ExpireTimeSpan = TimeSpan.FromHours(1);
+    });
 #endregion
 
 #region Configure Authorization with Policy

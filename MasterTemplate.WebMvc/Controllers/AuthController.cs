@@ -1,5 +1,6 @@
 ﻿using MasterTemplate.Common.Helpers;
 using MasterTemplate.Common.Utilities;
+using MasterTemplate.Data.ViewModels;
 using MasterTemplate.WebMvc.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -10,8 +11,7 @@ using System.Security.Claims;
 
 namespace MasterTemplate.WebMvc.Controllers
 {
-    [AllowAnonymous]
-    public class AuthController : BaseController
+    public class AuthController : Controller
     {
 
         public IActionResult Index()
@@ -26,7 +26,7 @@ namespace MasterTemplate.WebMvc.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromForm] LoginViewModel vm)
+        public async Task<IActionResult> Login([FromForm] Data.ViewModels.LoginViewModel vm)
         {
             var res = new ResponseViewModel();
 
@@ -40,7 +40,6 @@ namespace MasterTemplate.WebMvc.Controllers
             claims.Add(new Claim(ClaimTypes.NameIdentifier, vm.UserName ?? "")); // NameIdentifier is the ID for an object
             claims.Add(new Claim(ClaimTypes.Name, vm.UserName ?? "")); //  Name is just that a name       
             // Add roles as multiple claims
-            var roles = new List<string>() { "Admin", "User" }; 
             foreach (var role in user.Roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role));
@@ -50,16 +49,8 @@ namespace MasterTemplate.WebMvc.Controllers
 
 
 
-            if (vm.From == "")
+            if (vm.Bearer)
             {
-                var identity = new ClaimsIdentity(claims, "AppCookies");
-                ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
-
-                await HttpContext.SignInAsync("AppCookies", claimsPrincipal); 
-
-                return RedirectToAction("Index", "Home");
-            }
-            else {
                 // create a new token with token helper and add our claim
                 var token = JwtTokenHelper.GetJwtToken(vm.UserName ?? "",
                     Constants.JwtToken.SigningKey,
@@ -73,6 +64,15 @@ namespace MasterTemplate.WebMvc.Controllers
                     expires = token.ValidTo
                 });
             }
+            else 
+            {
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+
+                return RedirectToAction("Index", "Home");
+            }
 
         }
 
@@ -82,31 +82,5 @@ namespace MasterTemplate.WebMvc.Controllers
             await HttpContext.SignOutAsync("AppCookies");
             return RedirectToAction("Login", "Auth");
         }
-    }
-
-
-    public class Authentication
-    {
-        List<User> users = new List<User>();
-        public Authentication()
-        {
-            users.Add(new User() { UserName = "Khairul", Pasword= "123", Depertment ="IT", Roles = new List<string>() { "Admin", "User"} });
-            users.Add(new User() { UserName = "Alam", Pasword = "123", Depertment = "HR", Roles = new List<string>() { "Admin"} });
-            users.Add(new User() { UserName = "Taher", Pasword = "123", Depertment = "Accounts", Roles = new List<string>() { "Admin" } });
-        }
-
-        public User Login(string username, string password)
-        { 
-            return users.FirstOrDefault(w => w.UserName.ToLower() == username.ToLower() 
-                                && w.Pasword == password);
-        }
-    }
-
-    public class User
-    {
-        public string UserName { get; set; }
-        public string Pasword { get; set; }
-        public List<string> Roles { get; set; }
-        public string Depertment { get; set; }
     }
 }
