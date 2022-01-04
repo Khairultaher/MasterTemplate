@@ -4,6 +4,7 @@ using MasterTemplate.Service.Database;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -31,11 +32,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-// Configure Token Based Authentication
+#region Configure Token Based & Cookie Authentication
+
 builder.Services.AddAuthentication(config =>
 {
-    //auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    //auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     config.DefaultScheme = "AppCookieAuth";
 
 }).AddPolicyScheme("AppCookieAuth", "Bearer or Jwt", options =>
@@ -48,11 +48,11 @@ builder.Services.AddAuthentication(config =>
         else
             return CookieAuthenticationDefaults.AuthenticationScheme;
     };
-}).AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+}).AddCookie(options =>
 {
     options.Cookie.Name = "AppCookieAuth";
     options.LoginPath = new PathString("/auth/login");
-    options.AccessDeniedPath = new PathString("/auth/login");
+    options.AccessDeniedPath = "/Auth/Login"; ;
     options.LogoutPath = new PathString("/auth/logout");
     options.SlidingExpiration = true;
     options.ExpireTimeSpan = TimeSpan.FromHours(1);
@@ -70,25 +70,27 @@ builder.Services.AddAuthentication(config =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Constants.JwtToken.SigningKey))
     };
 });
-builder.Services.AddAuthorization(options =>
-{
-    options.DefaultPolicy = 
-    new AuthorizationPolicyBuilder(CookieAuthenticationDefaults.AuthenticationScheme, 
-                                   JwtBearerDefaults.AuthenticationScheme)
-        .RequireAuthenticatedUser()
-        .Build();
-});
-//builder.Services.AddAuthentication("AppCookieAuth")
-//    .AddCookie("AppCookieAuth", options =>
-//    {
-//        options.Cookie.Name = "AppCookieAuth";
 
+#endregion
+
+//builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+//    {
+//        options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
+//        options.LoginPath = new PathString("/auth/login");
+//        options.AccessDeniedPath = new PathString("/auth/login");
 //    });
 
+#region Authorization with Policy
 builder.Services.AddAuthorization(options =>
+{
     options.AddPolicy("HRAdmin", policy => policy.RequireClaim("Depertment", "HR")
-                                                  .RequireRole("Admin"))
-);
+                                              .RequireRole("Admin"));
+
+    options.AddPolicy("AccountsAdmin", policy => policy.RequireClaim("Depertment", "Accounts")
+                                             .RequireRole("Admin"));
+});
+#endregion
 
 #region Data Service
 //builder.Services.AddScoped<ProductService>();

@@ -2,6 +2,7 @@
 using MasterTemplate.Common.Utilities;
 using MasterTemplate.WebMvc.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
@@ -47,10 +48,10 @@ namespace MasterTemplate.WebMvc.Controllers
 
             if (vm.From == "")
             {
-                var identity = new ClaimsIdentity(claims, "AppCookieAuth");
+                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
 
-                await HttpContext.SignInAsync("AppCookieAuth", claimsPrincipal); 
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal); 
 
                 return RedirectToAction("Index", "Home");
             }
