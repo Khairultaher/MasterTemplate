@@ -1,4 +1,5 @@
 ﻿using MasterTemplate.Common.Utilities;
+using MasterTemplate.Data.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -8,14 +9,13 @@ namespace MasterTemplate.WebMvc.Controllers
     [Authorize]
     public class BaseController : Controller
     {
-        public string LogedInUser { get; set; }
-        public ResponseModel _response { get; set; }
+        public string logedInUser;
+        public ResponseViewModel response;
 
-        
         public BaseController()
         {
-            _response = new ResponseModel();
-            LogedInUser = "";
+            response = new ResponseViewModel();
+            logedInUser = "";
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)

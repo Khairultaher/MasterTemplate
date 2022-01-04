@@ -7,15 +7,13 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 var env = builder.Configuration.GetSection("Environment").Value;
-//builder.Configuration.AddJsonFile($"appsettings.{env}.json", false, true);
-IConfiguration configuration = new ConfigurationBuilder()
-                            .AddJsonFile($"appsettings.{env}.json")
-                            .Build();
+builder.Configuration.AddJsonFile($"appsettings.{env}.json", false, true);
+//IConfiguration configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.{env}.json").Build();                           .Build();
 
 #region Constants & Variables
-Constants.JwtToken.Issuer = configuration["JwtToken:Issuer"];
-Constants.JwtToken.Audience = configuration["JwtToken:Audience"];
-Constants.JwtToken.SigningKey = configuration["JwtToken:SigningKey"];
+Constants.JwtToken.Issuer = builder.Configuration["JwtToken:Issuer"];
+Constants.JwtToken.Audience = builder.Configuration["JwtToken:Audience"];
+Constants.JwtToken.SigningKey = builder.Configuration["JwtToken:SigningKey"];
 #endregion
 
 // Add services to the container.

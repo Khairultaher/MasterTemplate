@@ -14,10 +14,18 @@ namespace MasterTemplate.WebApi.Controllers
     [Route("api/[controller]")]
     public class AuthController : BaseController
     {
+        private readonly ILogger<AuthController> _logger;
+        private readonly IConfiguration _configuration;
+        public AuthController(ILogger<AuthController> logger, IConfiguration configuration)
+        {
+            _logger = logger;    
+            _configuration = configuration;
+        }
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> Login([FromForm] LoginViewModel vm)
         {
+            var issuer = _configuration["JwtToken:Issuer"];
             await Task.Delay(500);
             // My application logic to validate the user
             Authentication authentication = new Authentication();

@@ -9,6 +9,7 @@ namespace MasterTemplate.WebApi.Controllers
     public class BaseController : ControllerBase
     {
         public ResponseViewModel response { get; set; }
+       
         public BaseController()
         {
             response = new ResponseViewModel();  
