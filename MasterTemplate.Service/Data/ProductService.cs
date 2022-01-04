@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MasterTemplate.Service.Database
+namespace MasterTemplate.Services.Data
 {
     public class ProductService
     {

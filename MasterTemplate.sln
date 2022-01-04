@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterTemplate.Data", "MasterTemplate.Data\MasterTemplate.Data.csproj", "{1C1FF8E6-60AC-4688-958A-8B8D4F00AB2D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterTemplate.Data", "MasterTemplate.Data\MasterTemplate.Data.csproj", "{1C1FF8E6-60AC-4688-958A-8B8D4F00AB2D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterTemplate.Service", "MasterTemplate.Service\MasterTemplate.Service.csproj", "{5131AE45-7E9D-4E3C-B194-5D4F689B6BB0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterTemplate.Services", "MasterTemplate.Service\MasterTemplate.Services.csproj", "{5131AE45-7E9D-4E3C-B194-5D4F689B6BB0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterTemplate.WebMvc", "MasterTemplate.WebMvc\MasterTemplate.WebMvc.csproj", "{5C939408-EDB2-4BE9-B4F7-9C13A9CE4785}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterTemplate.WebMvc", "MasterTemplate.WebMvc\MasterTemplate.WebMvc.csproj", "{5C939408-EDB2-4BE9-B4F7-9C13A9CE4785}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterTemplate.Common", "MasterTemplate.Common\MasterTemplate.Common.csproj", "{2D70A6C2-4AC0-4AF5-94B0-5D2698EA41A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MasterTemplate.Common", "MasterTemplate.Common\MasterTemplate.Common.csproj", "{2D70A6C2-4AC0-4AF5-94B0-5D2698EA41A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

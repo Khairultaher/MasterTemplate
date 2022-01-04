@@ -16,7 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\MasterTemplate.Common\MasterTemplate.Common.csproj" />
     <ProjectReference Include="..\MasterTemplate.Data\MasterTemplate.Data.csproj" />
-    <ProjectReference Include="..\MasterTemplate.Service\MasterTemplate.Service.csproj" />
+    <ProjectReference Include="..\MasterTemplate.Service\MasterTemplate.Services.csproj" />
   </ItemGroup>
 
 </Project>

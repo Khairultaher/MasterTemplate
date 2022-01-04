@@ -1,28 +1,26 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MasterTemplate.WebMvc.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MasterTemplate.WebMvc.Controllers
+namespace MasterTemplate.WebMvc.APIs
 {
-    public class CustomerController : Controller
+    [Route("api")]
+    [Authorize]
+    public class CustomerController : BaseController
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        [Authorize(Roles = "Admin")]
         [HttpGet]
         [Route("customers")]
-        public async Task<IActionResult> GetCustomers() 
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetCustomers()
         {
             await Task.Delay(500);
-            var customers = new List<string> { "By Admin Role","A", "B","C"};
+            var customers = new List<string> { "By Admin Role", "A", "B", "C" };
             return Json(customers);
         }
 
-        [Authorize(policy: "HRAdmin")]
         [HttpGet]
         [Route("GetCustomersByHRAdminPolicy")]
+        [Authorize(policy: "HRAdmin")]
         public async Task<IActionResult> GetCustomersByHRAdminPolicy()
         {
             await Task.Delay(500);
@@ -30,9 +28,9 @@ namespace MasterTemplate.WebMvc.Controllers
             return Json(customers);
         }
 
-        [Authorize(policy: "AccountsAdmin")]
         [HttpGet]
         [Route("GetCustomersByAccountsAdminPolicy")]
+        [Authorize(policy: "AccountsAdmin")]
         public async Task<IActionResult> GetCustomersByAccountsAdminPolicy()
         {
             await Task.Delay(500);

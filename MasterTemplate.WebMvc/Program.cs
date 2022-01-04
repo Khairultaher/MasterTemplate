@@ -1,10 +1,7 @@
 using MasterTemplate.Common.Utilities;
 using MasterTemplate.Data;
-using MasterTemplate.Service.Database;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -32,7 +29,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-#region Configure Token Based & Cookie Authentication
+#region Configure Token & Cookie Based Authentication
 
 builder.Services.AddAuthentication(config =>
 {
@@ -80,9 +77,7 @@ builder.Services.AddAuthentication(config =>
 //    });
 #endregion
 
-
-
-#region Authorization with Policy
+#region Configure Authorization with Policy
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("HRAdmin", policy => policy.RequireClaim("Depertment", "HR")
@@ -90,6 +85,14 @@ builder.Services.AddAuthorization(options =>
 
     options.AddPolicy("AccountsAdmin", policy => policy.RequireClaim("Depertment", "Accounts")
                                              .RequireRole("Admin"));
+});
+#endregion
+
+#region Configure Session
+builder.Services.AddSession(options =>
+{
+    options.Cookie.HttpOnly = true; 
+    options.IdleTimeout = TimeSpan.FromHours(1);
 });
 #endregion
 
