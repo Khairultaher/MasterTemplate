@@ -36,9 +36,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddAuthentication(config =>
 {
-    config.DefaultScheme = "AppCookieAuth";
+    config.DefaultScheme = "AppCookies";
 
-}).AddPolicyScheme("AppCookieAuth", "Bearer or Jwt", options =>
+}).AddPolicyScheme("AppCookies", "Cookies or JWT", options =>
 {
     options.ForwardDefaultSelector = context =>
     {
@@ -50,7 +50,7 @@ builder.Services.AddAuthentication(config =>
     };
 }).AddCookie(options =>
 {
-    options.Cookie.Name = "AppCookieAuth";
+    options.Cookie.Name = "AppCookies";
     options.LoginPath = new PathString("/auth/login");
     options.AccessDeniedPath = "/Auth/Login"; ;
     options.LogoutPath = new PathString("/auth/logout");
@@ -71,8 +71,6 @@ builder.Services.AddAuthentication(config =>
     };
 });
 
-#endregion
-
 //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
 //    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
 //    {
@@ -80,6 +78,9 @@ builder.Services.AddAuthentication(config =>
 //        options.LoginPath = new PathString("/auth/login");
 //        options.AccessDeniedPath = new PathString("/auth/login");
 //    });
+#endregion
+
+
 
 #region Authorization with Policy
 builder.Services.AddAuthorization(options =>

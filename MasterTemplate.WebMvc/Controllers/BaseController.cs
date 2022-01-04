@@ -26,7 +26,7 @@ namespace MasterTemplate.WebMvc.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                LogedInUser = GetLogedInUser();
+                LogedInUser = User.Identity.Name;
             }
 
             base.OnActionExecuting(context);
@@ -35,12 +35,9 @@ namespace MasterTemplate.WebMvc.Controllers
         {
             // our code after action executes
 
-            Constants.BaseUrl = $"{this.Request.Scheme}://{this.Request.Host}";
+            //Constants.BaseUrl = $"{this.Request.Scheme}://{this.Request.Host}";
+
             base.OnActionExecuted(context);
-        }
-        public string GetLogedInUser()
-        {
-            return User.Identity.Name;
         }
     }
 }
