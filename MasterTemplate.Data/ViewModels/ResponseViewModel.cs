@@ -10,7 +10,7 @@ namespace MasterTemplate.Data.ViewModels
     {
         public bool Success { get; set; } = true;
         public string Message { get; set; } = "";
-        public string? Details { get; set; }
         public Object? Data { get; set; }
+        public Object? Error { get; set; }
     }
 }
