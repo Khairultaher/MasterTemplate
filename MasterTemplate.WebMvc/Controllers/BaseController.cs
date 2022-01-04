@@ -1,9 +1,11 @@
 ﻿using MasterTemplate.Common.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace MasterTemplate.WebMvc.Controllers
 {
+    [Authorize]
     public class BaseController : Controller
     {
         public string LogedInUser { get; set; }
@@ -15,8 +17,11 @@ namespace MasterTemplate.WebMvc.Controllers
             _response = new ResponseModel();
             LogedInUser = "";
         }
+
         public override void OnActionExecuting(ActionExecutingContext context)
         {
+            // our code before action executes
+
             Constants.BaseUrl = $"{this.Request.Scheme}://{this.Request.Host}";
 
             if (User.Identity.IsAuthenticated)
@@ -26,7 +31,13 @@ namespace MasterTemplate.WebMvc.Controllers
 
             base.OnActionExecuting(context);
         }
+        public override void OnActionExecuted(ActionExecutedContext context)
+        {
+            // our code after action executes
 
+            Constants.BaseUrl = $"{this.Request.Scheme}://{this.Request.Host}";
+            base.OnActionExecuted(context);
+        }
         public string GetLogedInUser()
         {
             return User.Identity.Name;
