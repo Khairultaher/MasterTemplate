@@ -4,16 +4,21 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
+// Add Services to the container
 var builder = WebApplication.CreateBuilder(args);
 
+#region Configuration
+builder.Configuration.AddJsonFile($"appsettings.json", false, true);
 var env = builder.Configuration.GetSection("Environment").Value;
 builder.Configuration.AddJsonFile($"appsettings.{env}.json", false, true);
 //IConfiguration configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.{env}.json").Build();                           .Build();
+IConfiguration configuration = builder.Configuration;
+#endregion
 
 #region Constants & Variables
-Constants.JwtToken.Issuer = builder.Configuration["JwtToken:Issuer"];
-Constants.JwtToken.Audience = builder.Configuration["JwtToken:Audience"];
-Constants.JwtToken.SigningKey = builder.Configuration["JwtToken:SigningKey"];
+Constants.JwtToken.Issuer = configuration["JwtToken:Issuer"];
+Constants.JwtToken.Audience = configuration["JwtToken:Audience"];
+Constants.JwtToken.SigningKey = configuration["JwtToken:SigningKey"];
 #endregion
 
 // Add services to the container.
@@ -74,9 +79,9 @@ builder.Services.AddAuthorization(options =>
 #endregion
 
 
+// Configure the HTTP request pipeline.
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -84,10 +89,18 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapGet("/", async context => {
+        await context.Response.WriteAsync("Yes, I am on...");
+    });
+});
 
 app.Run();

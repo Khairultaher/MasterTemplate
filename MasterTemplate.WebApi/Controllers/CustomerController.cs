@@ -10,11 +10,22 @@ namespace MasterTemplate.WebApi.Controllers
     [ApiController]
     public class CustomerController : BaseController
     {
+        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly IConfiguration _configuration;
+        public CustomerController(ILogger<WeatherForecastController> logger
+            , IConfiguration configuration)
+        {
+            _logger = logger;
+            _configuration = configuration;
+        }
         [HttpGet]
         [Route("GetCustomers")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetCustomers()
         {
+            _logger.Log(LogLevel.Information, _configuration["JwtToken:Issuer"]);
+            _logger.LogInformation(_configuration["JwtToken:Issuer"]);
+
             await Task.Delay(500);
             var customers = new List<string> { "By Admin Role", "A", "B", "C" };
             response.Data = customers;

@@ -12,10 +12,12 @@ namespace MasterTemplate.WebApi.Controllers
         };
 
         private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        private readonly IConfiguration _configuration;
+        public WeatherForecastController(ILogger<WeatherForecastController> logger
+            , IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration; 
         }
 
         [HttpGet(Name = "GetWeatherForecast")]

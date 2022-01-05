@@ -25,7 +25,6 @@ namespace MasterTemplate.WebApi.Controllers
         [Route("Login")]
         public async Task<IActionResult> Login([FromForm] LoginViewModel vm)
         {
-            var issuer = _configuration["JwtToken:Issuer"];
             await Task.Delay(500);
             // My application logic to validate the user
             Authentication authentication = new Authentication();
