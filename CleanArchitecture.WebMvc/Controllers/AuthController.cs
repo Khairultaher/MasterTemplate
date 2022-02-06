@@ -65,10 +65,10 @@ namespace MasterTemplate.WebMvc.Controllers
             }
             else 
             {
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var identity = new ClaimsIdentity(claims, "AppCookies");
                 ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
 
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+                await HttpContext.SignInAsync("AppCookies", claimsPrincipal);
 
                 return RedirectToAction("Index", "Home");
             }
@@ -79,6 +79,7 @@ namespace MasterTemplate.WebMvc.Controllers
         public async Task<IActionResult> Logout()
         { 
             await HttpContext.SignOutAsync("AppCookies");
+
             return RedirectToAction("Login", "Auth");
         }
     }

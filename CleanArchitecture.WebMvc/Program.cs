@@ -73,10 +73,10 @@ builder.Services.AddControllersWithViews();
 #endregion
 
 #region Configure Cookie Based Authentication
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+builder.Services.AddAuthentication("AppCookies")
+    .AddCookie("AppCookies", options =>
     {
-        options.Cookie.Name = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.Cookie.Name = "AppCookies";
         options.LoginPath = new PathString("/auth/login");
         options.AccessDeniedPath = new PathString("/auth/login");
         options.LogoutPath = new PathString("/auth/logout");
