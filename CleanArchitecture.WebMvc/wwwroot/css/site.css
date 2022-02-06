@@ -99,12 +99,19 @@ nav {
         padding-left: 2rem;
         border-left: 5px solid var(--active-color);
     }
-    .nav__item-link + ul a {
-        display: block;
-        padding: 1rem;
-        background-color: #f3f3f3;
-        white-space: nowrap;
-    }
+
+nav.collapse-nav .nav__item-link ~ ul {
+    position: absolute;
+    left: 100%;
+    margin-top: -62px;
+}
+
+.nav__item-link + ul a {
+    display: block;
+    padding: 1rem;
+    background-color: #f3f3f3;
+    white-space: nowrap;
+}
 
 /*js classes*/
 .collapse-nav {
